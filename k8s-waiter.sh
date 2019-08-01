@@ -17,11 +17,17 @@ token=$(cat $tokenfile)
 
 DELAY=${DELAY:-3}  # Sets default delay for checking service status to 3 seconds
 POST_DELAY=${POST_DELAY:-0}  # Sets default delay after service is considered "ready"
+PRE_DELAY=${PRE_DELAY:-0}  # Sets default delay after service is considered "ready"
+
+echo "Waiting for \$PRE_DELAY: $PRE_DELAY seconds..."
+sleep $PRE_DELAY
 
 # Check that there are more than zero ready endpoints
-until [ $(curl -s --cacert $cacert --header "Authorization: Bearer $token" \
+
+# TODO: fix issue where a `default` serviceaccount will return unauthorized and jq will fail thus causing -ge to fail
+until test $(curl -s --cacert $cacert --header "Authorization: Bearer $token" \
  https://kubernetes.default.svc/api/v1/namespaces/$NAMESPACE/endpoints/$SERVICE \
-	| jq -r '.subsets[].addresses | length') -ge "1" ]; do
+	| jq -r '.subsets[].addresses | length') -ge "1"; do
     echo "Service not ready: $NAMESPACE:$SERVICE"
     echo "Waiting $DELAY seconds ..."
     sleep $DELAY
