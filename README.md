@@ -8,8 +8,6 @@ This script is based on [this cool article](https://blog.giantswarm.io/wait-for-
 
 ### Usage
 
-The following example is partially inspired by the [`kubernetes/examples` Node.js and MongoDB example](https://github.com/kubernetes/examples/tree/master/staging/nodesjs-mongodb)
-
 First, define the service you need as a dependency:
 
 ```yaml
@@ -21,7 +19,7 @@ metadata:
 spec:
   ports:
     - port: 5000
-      targetPort: 5000
+      targetPort: 3000
   selector:
     app: user
 ---
@@ -58,7 +56,7 @@ template:
             periodSeconds: 5
 ```
 
-Define a `Pod`, or `Deployment` with the `k8s-waiter` `InitContainer`:
+Define a `Pod`, or `Deployment` with the `k8s-waiter` `InitContainer`, and boom! You're done!
 
 ```yaml
 apiVersion: apps/v1
@@ -84,7 +82,7 @@ template:
               containerPort: 80
               protocol: TCP
       initContainers:
-        - name: ensure-mongo
+        - name: ensure-user-svc
           image: alexkreidler/k8s-waiter
           env:
             - name: NAMESPACE
