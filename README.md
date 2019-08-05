@@ -89,6 +89,12 @@ template:
               value: default
             - name: SERVICE
               value: user
+            # Wait 5 seconds before checking the state of the service again
+            - name: DELAY
+              value: "5"
+            # PRE_DELAY is the time which the container waits before even beginning to check if the service is considered "ready"
+            - name: PRE_DELAY
+              value: "2"
             # POST_DELAY is the time which the container waits even after the service is considered "ready"
             - name: POST_DELAY
               value: "10"

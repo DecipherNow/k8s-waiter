@@ -29,9 +29,9 @@ fi;
 
 token=$(cat $tokenfile)
 
-DELAY=${DELAY:-3}  # Sets default delay for checking service status to 3 seconds
+DELAY=${DELAY:-3}  # Sets default delay between checking service status to 3 seconds
+PRE_DELAY=${PRE_DELAY:-0}  # Sets the delay time to wait before checking the service
 POST_DELAY=${POST_DELAY:-0}  # Sets default delay after service is considered "ready"
-PRE_DELAY=${PRE_DELAY:-0}  # Sets default delay after service is considered "ready"
 
 echo "Waiting for \$PRE_DELAY: $PRE_DELAY seconds..."
 sleep $PRE_DELAY
