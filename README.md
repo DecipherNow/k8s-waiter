@@ -83,7 +83,7 @@ template:
               protocol: TCP
       initContainers:
         - name: ensure-user-svc
-          image: alexkreidler/k8s-waiter
+          image: deciphernow/k8s-waiter
           env:
             - name: NAMESPACE
               value: default
@@ -93,3 +93,9 @@ template:
             - name: POST_DELAY
               value: "10"
 ```
+
+### License
+
+Copyright 2019 Decipher Technology Studios. Licensed under the Apache License, Version 2.0.
+
+Details may be found in the license header at the top of every source file in this repository
