@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+
 #   Copyright 2019 Decipher Technology Studios
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
