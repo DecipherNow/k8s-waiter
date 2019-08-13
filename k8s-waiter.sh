@@ -45,8 +45,12 @@ until test $endpoints -ge "1"; do
     sleep $DELAY
 
     echo "Checking service availability"
+    
+    url="https://kubernetes.default.svc/api/v1/namespaces/$NAMESPACE/endpoints/$SERVICE"
+    echo "Making Kubernetes API request to: $url"
+    
     # Check that there are more than zero ready endpoints
-    resp=$(curl -s --cacert $cacert --header "Authorization: Bearer $token" https://kubernetes.default.svc/api/v1/namespaces/$NAMESPACE/endpoints/$SERVICE)
+    resp=$(curl -s --cacert $cacert --header "Authorization: Bearer $token" $url)
 
     echo "Got: $resp"
 
