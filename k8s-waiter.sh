@@ -37,15 +37,23 @@ POST_DELAY=${POST_DELAY:-0}  # Sets default delay after service is considered "r
 echo "Waiting for \$PRE_DELAY: $PRE_DELAY seconds..."
 sleep $PRE_DELAY
 
-# Check that there are more than zero ready endpoints
-
+endpoints=0
 # TODO: fix issue where a `default` serviceaccount will return unauthorized and jq will fail thus causing -ge to fail
-until test $(curl -s --cacert $cacert --header "Authorization: Bearer $token" \
- https://kubernetes.default.svc/api/v1/namespaces/$NAMESPACE/endpoints/$SERVICE \
-	| jq -r '.subsets[].addresses | length') -ge "1"; do
+until test $endpoints -ge "1"; do
     echo "Service not ready: $NAMESPACE:$SERVICE"
     echo "Waiting $DELAY seconds ..."
     sleep $DELAY
+
+    echo "Checking service availability"
+    # Check that there are more than zero ready endpoints
+    resp=$(curl -s --cacert $cacert --header "Authorization: Bearer $token" https://kubernetes.default.svc/api/v1/namespaces/$NAMESPACE/endpoints/$SERVICE)
+
+    echo "Got: $resp"
+
+    [ -z "$resp" ] && ( echo "Got an empty response from the Kubernetes API. Have you properly configured the service account? Exiting..."; exit )
+
+    endpoints=$(echo $resp | jq -r '.subsets[].addresses | length')
+    echo "Got $endpoints ready endpoints"
 done;
 
 echo "Found service!"
