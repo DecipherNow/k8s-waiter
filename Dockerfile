@@ -14,8 +14,17 @@
 
 FROM alpine:3.10
 
-RUN apk add --no-cache curl jq
+RUN apk update \
+    && apk upgrade \
+    && apk add --no-cache curl jq \
+    && rm -f /etc/apk/repositories \
+    && apk update
 
 COPY k8s-waiter.sh /wait.sh
+
+RUN chgrp -R 0 /wait.sh && \
+    chmod -R g=u /wait.sh
+
+USER 1000
 
 CMD [ "/wait.sh" ]
